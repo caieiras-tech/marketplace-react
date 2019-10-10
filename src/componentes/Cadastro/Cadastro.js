@@ -10,6 +10,9 @@ const Cadastro = () => {
   const [confirmEmail, setConfirmEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [id, setId] = useState(1);
+  const [count, setCount] = useState(1);
+  const [mensagem, setMensagem] = useState("");
+  const [status, setStatus] = useState();
 
   const gerarPersonagem = () => {
     if (id === 494) {
@@ -19,8 +22,39 @@ const Cadastro = () => {
     }
   }
 
+  const resposta = texto => {
+    setMensagem(texto);
+    setTimeout(() => {
+      setMensagem("")
+    }, 1500);
+  }
+
+
+
   const handleSubmit = e => {
     e.preventDefault();
+
+    if (email === confirmEmail) {
+      const payload = {
+        name: nome,
+        email: email,
+        confirm_email: confirmEmail,
+        password: senha
+      }
+      localStorage.setItem(`Dados${count}`, JSON.stringify(payload));
+      setCount(count + 1);
+
+      setNome("");
+      setEmail("");
+      setConfirmEmail("");
+      setSenha("");
+      resposta("Cadastrado com sucesso")
+      setStatus(true)
+
+    } else {
+      resposta("Os emails não correspondem");
+      setStatus(false);
+    }
   };
 
   useEffect(() => {
@@ -38,7 +72,8 @@ const Cadastro = () => {
   return (
     <div className="Cadastro">
       <h1>Faça seu cadastro</h1>
-      <button onClick={gerarPersonagem}>Gerar personagem</button>
+      {/* <button onClick={gerarPersonagem}>Gerar personagem</button> */}
+      <p>{mensagem}</p>
       <form onSubmit={handleSubmit}>
         <Input
           value={nome}
